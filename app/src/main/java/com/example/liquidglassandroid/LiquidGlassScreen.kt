@@ -45,11 +45,7 @@ import com.kyant.backdrop.effects.lens
 import com.kyant.backdrop.effects.vibrancy
 import kotlin.math.roundToInt
 
-/**
- * Liquid Glass (Android) : réfraction + dispersion chromatique (lib Kyant0 `backdrop`).
- * - une BULLE de verre qu'on glisse sur le texte (réfraction + dispersion 🌈)
- * - un BOUTON de verre qui se CONTRACTE de façon élastique quand on APPUIE (presse & maintiens).
- */
+// Une bulle et un bouton en verre qui réfractent le fond.
 @Composable
 fun LiquidGlassScreen(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -57,7 +53,7 @@ fun LiquidGlassScreen(modifier: Modifier = Modifier) {
         var offset by remember { mutableStateOf(Offset.Zero) }
         var clicks by remember { mutableIntStateOf(0) }
 
-        // 1) FOND BLANC + TEXTE NOIR CENTRÉ = la source capturée
+        // Le fond réfracté par le verre
         Column(
             Modifier
                 .fillMaxSize()
@@ -72,7 +68,7 @@ fun LiquidGlassScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        // Compteur (feedback visible du bouton)
+        // Compteur de clics
         Text(
             "Clics : $clicks",
             color = Color.Black,
@@ -81,7 +77,7 @@ fun LiquidGlassScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.align(Alignment.TopCenter).padding(top = 64.dp),
         )
 
-        // 2) LA BULLE DE VERRE déplaçable (réfraction + dispersion chromatique)
+        // La bulle de verre, déplaçable au doigt
         Box(
             Modifier
                 .align(Alignment.Center)
@@ -104,7 +100,7 @@ fun LiquidGlassScreen(modifier: Modifier = Modifier) {
                 },
         )
 
-        // 3) LE BOUTON VERRE — se contracte (élastique) quand on appuie, et compte les clics
+        // Le bouton de verre
         LiquidGlassButton(
             text = "Appuie & maintiens ✦",
             backdrop = backdrop,
@@ -116,7 +112,7 @@ fun LiquidGlassScreen(modifier: Modifier = Modifier) {
     }
 }
 
-/** Bouton de verre qui se CONTRACTE fort (ressort rebondissant) à l'appui = effet liquide élastique. */
+// Bouton qui se contracte avec un effet de ressort quand on appuie.
 @Composable
 fun LiquidGlassButton(
     text: String,
@@ -127,10 +123,10 @@ fun LiquidGlassButton(
     val interaction = remember { MutableInteractionSource() }
     val pressed by interaction.collectIsPressedAsState()
     val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.80f else 1f,          // contraction bien visible
+        targetValue = if (pressed) 0.80f else 1f,
         animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy, // le rebond élastique
-            stiffness = Spring.StiffnessLow,                // assez lent pour bien le voir
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow,
         ),
         label = "scale",
     )
@@ -145,7 +141,7 @@ fun LiquidGlassButton(
                     blur(2f.dp.toPx())
                     lens(14f.dp.toPx(), 28f.dp.toPx(), chromaticAberration = true)
                 },
-                layerBlock = {                  // on déforme le calque verre selon l'appui
+                layerBlock = {
                     scaleX = scale
                     scaleY = scale
                 },
