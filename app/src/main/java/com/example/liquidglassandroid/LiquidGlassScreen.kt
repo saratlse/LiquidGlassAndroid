@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,13 +44,11 @@ import com.kyant.backdrop.effects.lens
 import com.kyant.backdrop.effects.vibrancy
 import kotlin.math.roundToInt
 
-// Une bulle et un bouton en verre qui réfractent le fond.
 @Composable
 fun LiquidGlassScreen(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize()) {
         val backdrop = rememberLayerBackdrop()
         var offset by remember { mutableStateOf(Offset.Zero) }
-        var clicks by remember { mutableIntStateOf(0) }
 
         // Le fond réfracté par le verre
         Column(
@@ -67,15 +64,6 @@ fun LiquidGlassScreen(modifier: Modifier = Modifier) {
                 Text("LIQUID GLASS ✦", color = Color.Black, fontSize = 30.sp, fontWeight = FontWeight.Black)
             }
         }
-
-        // Compteur de clics
-        Text(
-            "Clics : $clicks",
-            color = Color.Black,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.TopCenter).padding(top = 64.dp),
-        )
 
         // La bulle de verre, déplaçable au doigt
         Box(
@@ -100,19 +88,18 @@ fun LiquidGlassScreen(modifier: Modifier = Modifier) {
                 },
         )
 
-        // Le bouton de verre
+
         LiquidGlassButton(
-            text = "Appuie & maintiens ✦",
+            text = "Press & hold",
             backdrop = backdrop,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
                 .padding(bottom = 40.dp),
-        ) { clicks++ }
+        ) {}
     }
 }
 
-// Bouton qui se contracte avec un effet de ressort quand on appuie.
 @Composable
 fun LiquidGlassButton(
     text: String,

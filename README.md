@@ -1,46 +1,44 @@
-# Liquid Glass — Android 🧊
+# Liquid Glass on Android
 
-Apple's iOS-26 **Liquid Glass** material, recreated on **Android with Jetpack Compose**:
-real **refraction**, **chromatic light dispersion** 🌈 and an **elastic touch** — not a fake blur.
+A small experiment to reproduce the iOS "Liquid Glass" material in Jetpack Compose:
+a glass shape that refracts what's behind it, with a bit of chromatic dispersion at the
+edges and an elastic press effect on a button.
 
 ![demo](docs/demo.png)
 
-## ✨ What it does
-- A **glass bubble** you drag over the content → the text behind it **bends** (lens refraction) and
-  the **light splits into colours** at the edges (chromatic aberration).
-- A **glass button** that **squishes elastically** when you press &amp; hold it (bouncy spring), with a
-  live click counter.
+## How it works
 
-## 🔧 How it works
-There is **no native Liquid Glass on Android** (it's iOS-only). The real refraction here comes from
-the **[Kyant0 `backdrop`](https://github.com/Kyant0/AndroidLiquidGlass)** library and its `lens()`
-effect (AGSL shaders) — a captured backdrop that the glass element refracts.
+Android has no native equivalent of iOS Liquid Glass, so the refraction relies on the
+[Kyant0 backdrop](https://github.com/Kyant0/AndroidLiquidGlass) library. The background is
+captured as a "source", and the glass element renders that source through a `lens` effect
+(AGSL shaders).
 
 ```kotlin
 val backdrop = rememberLayerBackdrop()
 
-// 1) the background = the captured "source"
+// background captured as the source
 Box(Modifier.layerBackdrop(backdrop).background(Color.White)) { /* content */ }
 
-// 2) the glass element refracts that backdrop
+// glass element refracting the source
 Box(Modifier.drawBackdrop(
     backdrop = backdrop,
     shape = { CircleShape },
     effects = {
         vibrancy()
         blur(1.dp.toPx())
-        lens(28.dp.toPx(), 56.dp.toPx(), depthEffect = true, chromaticAberration = true) // 🌈
+        lens(28.dp.toPx(), 56.dp.toPx(), depthEffect = true, chromaticAberration = true)
     },
 ))
 ```
 
-## ⚙️ Requirements
-- `compileSdk 37`
-- Runs on **Android 13+ (API 33)** — the effect uses AGSL `RuntimeShader`.
+The button uses a spring animation on the press state to scale it down, which gives the
+elastic feel.
 
-## 📚 Credits
-Powered by **[Kyant0/AndroidLiquidGlass](https://github.com/Kyant0/AndroidLiquidGlass)**
-(`io.github.kyant0:backdrop`).
+## Requirements
 
----
-Built with Jetpack Compose · 100% Kotlin
+- compileSdk 37
+- Runs on Android 13+ (API 33), since the effect uses AGSL `RuntimeShader`.
+
+## Credits
+
+Refraction powered by [Kyant0/AndroidLiquidGlass](https://github.com/Kyant0/AndroidLiquidGlass).
